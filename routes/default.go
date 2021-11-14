@@ -11,9 +11,8 @@ import (
 
 func ApplyRoutes(eng *gin.Engine) {
 	grp := eng.Group("/")
-	{
-		grp.Handle(http.MethodGet, "/", rootHandler)
-	}
+	grp.Handle(http.MethodGet, "/", rootHandler)
+
 	database.ApplyRoutes(grp)
 	management.ApplyRoutes(grp)
 }

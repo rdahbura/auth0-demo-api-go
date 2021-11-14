@@ -28,12 +28,10 @@ func ApplyRoutes(rg *gin.RouterGroup) {
 	checkScope := middleware.CheckScope(checkScopeOptions)
 
 	grp := rg.Group("/db", checkJwt())
-	{
-		grp.Handle(http.MethodPost, "logins", logins)
-		grp.Handle(http.MethodGet, "users", checkScope("read:users"), getUsers)
-		grp.Handle(http.MethodGet, "users/:id", checkScope("read:users"), getUser)
-		grp.Handle(http.MethodPost, "users", checkScope("create:users"), createUser)
-		grp.Handle(http.MethodDelete, "users/:id", checkScope("delete:users"), deleteUser)
-		grp.Handle(http.MethodPatch, "users/:id", checkScope("update:users"), updateUser)
-	}
+	grp.Handle(http.MethodPost, "logins", logins)
+	grp.Handle(http.MethodGet, "users", checkScope("read:users"), getUsers)
+	grp.Handle(http.MethodGet, "users/:id", checkScope("read:users"), getUser)
+	grp.Handle(http.MethodPost, "users", checkScope("create:users"), createUser)
+	grp.Handle(http.MethodDelete, "users/:id", checkScope("delete:users"), deleteUser)
+	grp.Handle(http.MethodPatch, "users/:id", checkScope("update:users"), updateUser)
 }
