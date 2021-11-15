@@ -7,23 +7,32 @@ import (
 	"dahbura.me/api/config"
 )
 
-var httpClient = http.Client{
-	Timeout: config.DefaultClientTimeout,
-}
+var (
+	cache      = map[string]string{}
+	httpClient = http.Client{
+		Timeout: config.DefaultClientTimeout,
+	}
+)
 
 func fetchEncodedDer(jwksUrl string, kid string) (string, error) {
+	encodedDer, ok := cache[jwksUrl]
+	if ok {
+		return encodedDer, nil
+	}
+
 	jwks, err := readJwkSet(jwksUrl)
 	if err != nil {
 		return "", err
 	}
 
-	var encodedDer string
 	for _, key := range jwks.Keys {
 		if key.Kid == kid {
 			encodedDer = key.X5C[0]
 			break
 		}
 	}
+
+	cache[jwksUrl] = encodedDer
 
 	return encodedDer, nil
 }
