@@ -3,18 +3,26 @@ package jose
 import (
 	"encoding/json"
 	"net/http"
+	"sync"
 
 	"dahbura.me/api/config"
 )
 
 var (
 	cache      = map[string]string{}
+	cacheMutex = sync.Mutex{}
+)
+
+var (
 	httpClient = http.Client{
 		Timeout: config.DefaultClientTimeout,
 	}
 )
 
 func fetchEncodedDer(jwksUrl string, kid string) (string, error) {
+	cacheMutex.Lock()
+	defer cacheMutex.Unlock()
+
 	encodedDer, ok := cache[jwksUrl]
 	if ok {
 		return encodedDer, nil
