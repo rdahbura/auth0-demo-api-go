@@ -8,7 +8,6 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
-	"time"
 
 	"dahbura.me/api/config"
 	"dahbura.me/api/middleware"
@@ -60,7 +59,7 @@ func main() {
 
 	log.Println("Stopping server...")
 
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
+	ctx, cancel := context.WithTimeout(context.Background(), config.DefaultCtxTimeout)
 	defer cancel()
 
 	if err := srv.Shutdown(ctx); err != nil {
