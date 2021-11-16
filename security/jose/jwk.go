@@ -3,14 +3,14 @@ package jose
 import (
 	"encoding/json"
 	"net/http"
-	"sync"
+	"time"
 
 	"dahbura.me/api/config"
+	"dahbura.me/api/util/cache"
 )
 
 var (
-	cache      = map[string]string{}
-	cacheMutex = sync.Mutex{}
+	memoryCache = cache.New()
 )
 
 var (
@@ -20,12 +20,9 @@ var (
 )
 
 func fetchEncodedDer(jwksUrl string, kid string) (string, error) {
-	cacheMutex.Lock()
-	defer cacheMutex.Unlock()
-
-	encodedDer, ok := cache[jwksUrl]
+	encodedDer, ok := memoryCache.Get(kid)
 	if ok {
-		return encodedDer, nil
+		return encodedDer.(string), nil
 	}
 
 	jwks, err := readJwkSet(jwksUrl)
@@ -40,9 +37,18 @@ func fetchEncodedDer(jwksUrl string, kid string) (string, error) {
 		}
 	}
 
-	cache[jwksUrl] = encodedDer
+	cacheItem := cache.CacheItem{
+		Key:   kid,
+		Value: encodedDer,
+	}
 
-	return encodedDer, nil
+	cacheItemPolicy := cache.CacheItemPolicy{
+		AbsExp: time.Now().Add(time.Second * 10),
+	}
+
+	memoryCache.Set(cacheItem, cacheItemPolicy)
+
+	return encodedDer.(string), nil
 }
 
 func readJwkSet(jwksUrl string) (*JwkSet, error) {
