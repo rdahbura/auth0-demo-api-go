@@ -9,6 +9,7 @@ import (
 	"dahbura.me/api/database/models"
 	"dahbura.me/api/database/mongodb"
 	httppkg "dahbura.me/api/util/http"
+	"dahbura.me/api/util/validation"
 
 	"github.com/gin-gonic/gin"
 
@@ -31,6 +32,8 @@ func createUser(c *gin.Context) {
 	if httppkg.HandleError(c, err) {
 		return
 	}
+
+	validate := validation.GetValidator()
 
 	err = validate.Struct(user)
 	if httppkg.HandleError(c, err) {
@@ -178,6 +181,8 @@ func updateUser(c *gin.Context) {
 	if httppkg.HandleError(c, err) {
 		return
 	}
+
+	validate := validation.GetValidator()
 
 	err = validate.Struct(user)
 	if httppkg.HandleError(c, err) {

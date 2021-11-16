@@ -8,6 +8,7 @@ import (
 	"dahbura.me/api/database/models"
 	"dahbura.me/api/database/mongodb"
 	httppkg "dahbura.me/api/util/http"
+	"dahbura.me/api/util/validation"
 
 	"github.com/gin-gonic/gin"
 
@@ -28,6 +29,8 @@ func logins(c *gin.Context) {
 	if httppkg.HandleError(c, err) {
 		return
 	}
+
+	validate := validation.GetValidator()
 
 	err = validate.Struct(login)
 	if httppkg.HandleError(c, err) {

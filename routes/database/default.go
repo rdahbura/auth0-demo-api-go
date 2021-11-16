@@ -7,14 +7,9 @@ import (
 	"dahbura.me/api/middleware"
 
 	"github.com/gin-gonic/gin"
-	"github.com/go-playground/validator/v10"
 )
 
-var validate *validator.Validate
-
 func ApplyRoutes(rg *gin.RouterGroup) {
-	validate = validator.New()
-
 	checkJwtOptions := middleware.CheckJwtOptions{
 		TokenAudience: config.TokenAudience,
 		TokenIssuer:   config.TokenIssuer + "/",
