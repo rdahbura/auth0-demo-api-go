@@ -5,13 +5,13 @@ import (
 	"time"
 )
 
-type CacheItem struct {
+type Item struct {
 	Key   string
 	Value interface{}
 }
 
-type CacheItemPolicy struct {
-	AbsExp time.Time
+type ItemPolicy struct {
+	AbsoluteExp time.Time
 }
 
 type MemoryCache struct {
@@ -21,8 +21,8 @@ type MemoryCache struct {
 }
 
 type cacheEntry struct {
-	value  interface{}
-	absExp time.Time
+	value       interface{}
+	absoluteExp time.Time
 }
 
 func New() *MemoryCache {
@@ -32,12 +32,12 @@ func New() *MemoryCache {
 		ticker:   time.NewTicker(time.Minute * 1),
 	}
 
-	go mc.run()
+	go mc.startCleaner()
 
 	return &mc
 }
 
-func (mc *MemoryCache) Add(item CacheItem, itemPolicy CacheItemPolicy) bool {
+func (mc *MemoryCache) Add(item Item, itemPolicy ItemPolicy) bool {
 	mc.cacheMtx.Lock()
 	defer mc.cacheMtx.Unlock()
 
@@ -67,7 +67,7 @@ func (mc *MemoryCache) GetCount() int {
 	return len(mc.cache)
 }
 
-func (mc *MemoryCache) Set(item CacheItem, itemPolicy CacheItemPolicy) {
+func (mc *MemoryCache) Set(item Item, itemPolicy ItemPolicy) {
 	mc.cacheMtx.Lock()
 	defer mc.cacheMtx.Unlock()
 
@@ -78,8 +78,9 @@ func (mc *MemoryCache) clean() {
 	mc.cacheMtx.Lock()
 	defer mc.cacheMtx.Unlock()
 
+	now := time.Now()
 	for k, v := range mc.cache {
-		if time.Now().After(v.absExp) {
+		if now.After(v.absoluteExp) {
 			delete(mc.cache, k)
 		}
 	}
@@ -88,7 +89,7 @@ func (mc *MemoryCache) clean() {
 func (mc *MemoryCache) get(key string) (interface{}, bool) {
 	cacheEntry, ok := mc.cache[key]
 	if ok {
-		if time.Now().Before(cacheEntry.absExp) {
+		if time.Now().Before(cacheEntry.absoluteExp) {
 			return cacheEntry.value, true
 		}
 	}
@@ -96,16 +97,17 @@ func (mc *MemoryCache) get(key string) (interface{}, bool) {
 	return nil, false
 }
 
-func (mc *MemoryCache) run() {
-	for {
-		<-mc.ticker.C
-		mc.clean()
+func (mc *MemoryCache) set(item Item, itemPolicy ItemPolicy) {
+	mc.cache[item.Key] = cacheEntry{
+		value:       item.Value,
+		absoluteExp: itemPolicy.AbsoluteExp,
 	}
 }
 
-func (mc *MemoryCache) set(item CacheItem, itemPolicy CacheItemPolicy) {
-	mc.cache[item.Key] = cacheEntry{
-		value:  item.Value,
-		absExp: itemPolicy.AbsExp,
+func (mc *MemoryCache) startCleaner() {
+	for {
+		<-mc.ticker.C
+
+		mc.clean()
 	}
 }
