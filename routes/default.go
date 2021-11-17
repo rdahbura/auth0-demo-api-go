@@ -25,7 +25,7 @@ func Startup(router *gin.Engine) {
 
 	rg := router.Group("/")
 	{
-		rg.Handle(http.MethodGet, "/", root)
+		rg.Handle(http.MethodGet, "/", rootHandler)
 	}
 
 	rgDb := rg.Group("/db", checkJwt())
@@ -50,6 +50,6 @@ func Startup(router *gin.Engine) {
 	}
 }
 
-func root(c *gin.Context) {
+func rootHandler(c *gin.Context) {
 	c.String(http.StatusOK, "OK")
 }
