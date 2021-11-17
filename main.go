@@ -24,22 +24,22 @@ func main() {
 	config.Load()
 
 	// blank engine
-	eng := gin.New()
+	router := gin.New()
 
 	// middleware
-	eng.Use(middleware.Logger())
-	eng.Use(middleware.Recovery())
-	eng.Use(middleware.Cors())
+	router.Use(middleware.Logger())
+	router.Use(middleware.Recovery())
+	router.Use(middleware.Cors())
 
 	// routes
-	routes.ApplyRoutes(eng)
+	routes.ApplyRoutes(router)
 
 	// server config
 	addr := fmt.Sprintf("%s:%s", config.Host, config.Port)
 
 	srv := &http.Server{
 		Addr:         addr,
-		Handler:      eng,
+		Handler:      router,
 		IdleTimeout:  config.DefaultIdleTimeout,
 		ReadTimeout:  config.DefaultReadTimeout,
 		WriteTimeout: config.DefaultWriteTimeout,

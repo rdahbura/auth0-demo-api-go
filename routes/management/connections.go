@@ -11,7 +11,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func getConnections(c *gin.Context) {
+func GetConnections(c *gin.Context) {
 	url := fmt.Sprintf("%s/connections", config.MgmtApiBaseUrl)
 	req, err := http.NewRequest(http.MethodGet, url, nil)
 	if httppkg.HandleError(c, err) {
@@ -32,7 +32,7 @@ func getConnections(c *gin.Context) {
 	c.String(http.StatusOK, string(body))
 }
 
-func getConnection(c *gin.Context) {
+func GetConnection(c *gin.Context) {
 	id := c.Param("id")
 	url := fmt.Sprintf("%s/connections/%s", config.MgmtApiBaseUrl, id)
 	req, err := http.NewRequest(http.MethodGet, url, nil)

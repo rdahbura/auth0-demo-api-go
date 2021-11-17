@@ -21,7 +21,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-func createUser(c *gin.Context) {
+func CreateUser(c *gin.Context) {
 	client, err := mongodb.GetMongoClient()
 	if httppkg.HandleError(c, err) {
 		return
@@ -66,7 +66,7 @@ func createUser(c *gin.Context) {
 	c.JSON(http.StatusCreated, user)
 }
 
-func deleteUser(c *gin.Context) {
+func DeleteUser(c *gin.Context) {
 	client, err := mongodb.GetMongoClient()
 	if httppkg.HandleError(c, err) {
 		return
@@ -93,7 +93,7 @@ func deleteUser(c *gin.Context) {
 	c.Status(http.StatusNoContent)
 }
 
-func getUsers(c *gin.Context) {
+func GetUsers(c *gin.Context) {
 	client, err := mongodb.GetMongoClient()
 	if httppkg.HandleError(c, err) {
 		return
@@ -130,7 +130,7 @@ func getUsers(c *gin.Context) {
 	c.JSON(http.StatusOK, users)
 }
 
-func getUser(c *gin.Context) {
+func GetUser(c *gin.Context) {
 	client, err := mongodb.GetMongoClient()
 	if httppkg.HandleError(c, err) {
 		return
@@ -165,7 +165,7 @@ func getUser(c *gin.Context) {
 	c.JSON(http.StatusOK, user)
 }
 
-func updateUser(c *gin.Context) {
+func UpdateUser(c *gin.Context) {
 	client, err := mongodb.GetMongoClient()
 	if httppkg.HandleError(c, err) {
 		return
