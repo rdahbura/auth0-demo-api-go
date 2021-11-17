@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"dahbura.me/api/config"
+	"dahbura.me/api/routes/management/security"
 	"dahbura.me/api/security/oauth2"
 	httppkg "dahbura.me/api/util/http"
 
@@ -18,7 +19,7 @@ func GetConnections(c *gin.Context) {
 		return
 	}
 
-	err = oauth2.SetAuthHeader(req, clientCredSrc)
+	err = oauth2.SetAuthHeader(req, security.GetClientCredSrc())
 	if httppkg.HandleError(c, err) {
 		return
 	}
@@ -40,7 +41,7 @@ func GetConnection(c *gin.Context) {
 		return
 	}
 
-	err = oauth2.SetAuthHeader(req, clientCredSrc)
+	err = oauth2.SetAuthHeader(req, security.GetClientCredSrc())
 	if httppkg.HandleError(c, err) {
 		return
 	}

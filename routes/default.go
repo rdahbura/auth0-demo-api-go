@@ -48,8 +48,6 @@ func Startup(router *gin.Engine) {
 		rgMgmt.Handle(http.MethodGet, "users/:id", checkScope("read:users"), management.GetUser)
 		rgMgmt.Handle(http.MethodPatch, "users/:id", checkScope("update:users"), management.PatchUser)
 	}
-
-	management.Startup()
 }
 
 func root(c *gin.Context) {
