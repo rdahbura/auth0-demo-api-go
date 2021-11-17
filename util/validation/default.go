@@ -15,5 +15,6 @@ func GetValidator() *validator.Validate {
 	validatorOnce.Do(func() {
 		validatorValidate = validator.New()
 	})
+
 	return validatorValidate
 }
