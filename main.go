@@ -32,7 +32,7 @@ func main() {
 	router.Use(middleware.Cors())
 
 	// routes
-	routes.ApplyRoutes(router)
+	routes.Startup(router)
 
 	// server config
 	addr := fmt.Sprintf("%s:%s", config.Host, config.Port)

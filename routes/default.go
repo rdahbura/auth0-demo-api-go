@@ -11,17 +11,16 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func ApplyRoutes(router *gin.Engine) {
+func Startup(router *gin.Engine) {
 	checkJwtOptions := middleware.CheckJwtOptions{
 		TokenAudience: config.TokenAudience,
 		TokenIssuer:   config.TokenIssuer + "/",
 	}
+	checkJwt := middleware.CheckJwt(checkJwtOptions)
 
 	checkScopeOptions := middleware.CheckScopeOptions{
 		ScopesClaim: "permissions",
 	}
-
-	checkJwt := middleware.CheckJwt(checkJwtOptions)
 	checkScope := middleware.CheckScope(checkScopeOptions)
 
 	rg := router.Group("/")
