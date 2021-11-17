@@ -24,7 +24,7 @@ func CheckJwt(options CheckJwtOptions) func() gin.HandlerFunc {
 		return func(c *gin.Context) {
 			header := c.GetHeader("Authorization")
 
-			token, err := parseBearerToken(header)
+			token, err := tokenFromHeader(header)
 			if handleError(c, err) {
 				return
 			}
@@ -48,7 +48,7 @@ type CheckScopeOptions struct {
 func CheckScope(options CheckScopeOptions) func(string) gin.HandlerFunc {
 	return func(scope string) gin.HandlerFunc {
 		return func(c *gin.Context) {
-			token, err := getBearerToken(c)
+			token, err := tokenFromContext(c)
 			if handleError(c, err) {
 				return
 			}
@@ -71,20 +71,6 @@ func CheckScope(options CheckScopeOptions) func(string) gin.HandlerFunc {
 			}
 		}
 	}
-}
-
-func getBearerToken(c *gin.Context) (string, error) {
-	v, exists := c.Get(config.ContextBearerToken)
-	if !exists {
-		return "", errors.New("unable to get bearer token")
-	}
-
-	s, ok := v.(string)
-	if !ok {
-		return "", errors.New("unable to convert token to string")
-	}
-
-	return s, nil
 }
 
 func handleError(c *gin.Context, err error) bool {
@@ -116,7 +102,21 @@ func hasScope(payload map[string]interface{}, scopesClaim string, scope string) 
 	return true, nil
 }
 
-func parseBearerToken(header string) (string, error) {
+func tokenFromContext(c *gin.Context) (string, error) {
+	v, exists := c.Get(config.ContextBearerToken)
+	if !exists {
+		return "", errors.New("unable to get bearer token")
+	}
+
+	s, ok := v.(string)
+	if !ok {
+		return "", errors.New("unable to convert token to string")
+	}
+
+	return s, nil
+}
+
+func tokenFromHeader(header string) (string, error) {
 	if len(header) == 0 {
 		return "", errors.New("authorization header is missing")
 	}
