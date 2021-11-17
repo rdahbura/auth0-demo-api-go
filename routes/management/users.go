@@ -11,7 +11,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func getUsers(c *gin.Context) {
+func GetUsers(c *gin.Context) {
 	url := fmt.Sprintf("%s/users", config.MgmtApiBaseUrl)
 	req, err := http.NewRequest(http.MethodGet, url, nil)
 	if httppkg.HandleError(c, err) {
@@ -32,7 +32,7 @@ func getUsers(c *gin.Context) {
 	c.String(http.StatusOK, string(body))
 }
 
-func getUser(c *gin.Context) {
+func GetUser(c *gin.Context) {
 	id := c.Param("id")
 	url := fmt.Sprintf("%s/users/%s", config.MgmtApiBaseUrl, id)
 	req, err := http.NewRequest(http.MethodGet, url, nil)
@@ -54,7 +54,7 @@ func getUser(c *gin.Context) {
 	c.String(http.StatusOK, string(body))
 }
 
-func patchUser(c *gin.Context) {
+func PatchUser(c *gin.Context) {
 	id := c.Param("id")
 	url := fmt.Sprintf("%s/users/%s", config.MgmtApiBaseUrl, id)
 	req, err := http.NewRequest(http.MethodPatch, url, c.Request.Body)

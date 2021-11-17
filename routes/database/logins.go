@@ -18,7 +18,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-func logins(c *gin.Context) {
+func Logins(c *gin.Context) {
 	client, err := mongodb.GetMongoClient()
 	if httppkg.HandleError(c, err) {
 		return

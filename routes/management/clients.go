@@ -11,7 +11,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func getClients(c *gin.Context) {
+func GetClients(c *gin.Context) {
 	url := fmt.Sprintf("%s/clients", config.MgmtApiBaseUrl)
 	req, err := http.NewRequest(http.MethodGet, url, nil)
 	if httppkg.HandleError(c, err) {
@@ -32,7 +32,7 @@ func getClients(c *gin.Context) {
 	c.String(http.StatusOK, string(body))
 }
 
-func getClient(c *gin.Context) {
+func GetClient(c *gin.Context) {
 	id := c.Param("id")
 	url := fmt.Sprintf("%s/clients/%s", config.MgmtApiBaseUrl, id)
 	req, err := http.NewRequest(http.MethodGet, url, nil)
