@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"net/url"
 	"strings"
 	"time"
 	"unicode/utf8"
@@ -57,7 +58,7 @@ func (jwt *Jwt) IssuedAt() time.Time {
 
 // VerifyCompact returns the verified state of a JWT using the
 // JWS Compact Serialization format.
-func VerifyCompact(jwksUrl string, jws string, issuer string, audience string) error {
+func VerifyCompact(jws string, issuer string, audience string) error {
 	if len(jws) == 0 {
 		return errors.New("missing token")
 	}
@@ -66,6 +67,13 @@ func VerifyCompact(jwksUrl string, jws string, issuer string, audience string) e
 	if len(segments) != 3 {
 		return errors.New("incompatible token detected (not JWS compact)")
 	}
+
+	_, err := url.ParseRequestURI(issuer)
+	if err != nil {
+		return errors.New("improperyl formatted issuer")
+	}
+
+	jwksUrl := fmt.Sprintf("%s/.well-known/jwks.json", strings.TrimSuffix(issuer, "/"))
 
 	decoder := base64.RawURLEncoding.DecodeString
 

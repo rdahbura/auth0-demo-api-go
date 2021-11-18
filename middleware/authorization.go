@@ -1,15 +1,9 @@
 package middleware
 
 import (
-	"encoding/base64"
-	"encoding/json"
-	"errors"
-	"fmt"
-	"net/http"
-	"strings"
-
 	"dahbura.me/api/config"
 	"dahbura.me/api/security/jose"
+	httppkg "dahbura.me/api/util/http"
 
 	"github.com/gin-gonic/gin"
 )
@@ -24,15 +18,13 @@ func CheckJwt(options CheckJwtOptions) func() gin.HandlerFunc {
 		return func(c *gin.Context) {
 			header := c.GetHeader("Authorization")
 
-			token, err := tokenFromHeader(header)
-			if handleError(c, err) {
+			token, err := httppkg.TokenFromHeader(header)
+			if httppkg.HandleErrorMiddleware(c, err) {
 				return
 			}
 
-			jwksUrl := fmt.Sprintf("%s/.well-known/jwks.json", strings.TrimSuffix(options.TokenIssuer, "/"))
-
-			err = jose.VerifyCompact(jwksUrl, token, options.TokenIssuer, options.TokenAudience)
-			if handleError(c, err) {
+			err = jose.VerifyCompact(token, options.TokenIssuer, options.TokenAudience)
+			if httppkg.HandleErrorMiddleware(c, err) {
 				return
 			}
 
@@ -48,99 +40,15 @@ type CheckScopeOptions struct {
 func CheckScope(options CheckScopeOptions) func(string) gin.HandlerFunc {
 	return func(scope string) gin.HandlerFunc {
 		return func(c *gin.Context) {
-			token, err := tokenFromContext(c)
-			if handleError(c, err) {
+			token, err := httppkg.TokenFromContext(c)
+			if httppkg.HandleErrorMiddleware(c, err) {
 				return
 			}
 
-			encodedPayload := strings.Split(token, ".")[1]
-			decodedPayload, err := base64.RawURLEncoding.DecodeString(encodedPayload)
-			if handleError(c, err) {
-				return
-			}
-
-			payload := map[string]interface{}{}
-			err = json.Unmarshal(decodedPayload, &payload)
-			if handleError(c, err) {
-				return
-			}
-
-			_, err = hasScope(payload, options.ScopesClaim, scope)
-			if handleError(c, err) {
+			err = httppkg.VerifyScope(token, options.ScopesClaim, scope)
+			if httppkg.HandleErrorMiddleware(c, err) {
 				return
 			}
 		}
 	}
-}
-
-func handleError(c *gin.Context, err error) bool {
-	if err != nil {
-		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"msg": err.Error()})
-		c.Error(err)
-		return true
-	}
-
-	return false
-}
-
-func hasScope(payload map[string]interface{}, scopesClaim string, scope string) (bool, error) {
-	v, exists := payload[scopesClaim]
-	if !exists {
-		return false, errors.New("claim is missing")
-	}
-
-	i, ok := v.([]interface{})
-	if !ok {
-		return false, errors.New("claim is improperly formatted")
-	}
-
-	_, ok = toMap(i)[scope]
-	if !ok {
-		return false, errors.New("claim does not contain scope")
-	}
-
-	return true, nil
-}
-
-func tokenFromContext(c *gin.Context) (string, error) {
-	v, exists := c.Get(config.ContextBearerToken)
-	if !exists {
-		return "", errors.New("unable to get bearer token")
-	}
-
-	s, ok := v.(string)
-	if !ok {
-		return "", errors.New("unable to convert token to string")
-	}
-
-	return s, nil
-}
-
-func tokenFromHeader(header string) (string, error) {
-	if len(header) == 0 {
-		return "", errors.New("authorization header is missing")
-	}
-
-	headerSegments := strings.Split(header, " ")
-	if len(headerSegments) != 2 {
-		return "", errors.New("authorization header segment count is incorrect")
-	}
-
-	schemeSegment := headerSegments[0]
-	if !strings.EqualFold(schemeSegment, "Bearer") {
-		return "", errors.New("authorization scheme is missing")
-	}
-
-	tokenSegment := headerSegments[1]
-
-	return tokenSegment, nil
-}
-
-func toMap(values []interface{}) map[string]int {
-	m := map[string]int{}
-	for i, v := range values {
-		m[v.(string)] = i
-	}
-
-	return m
 }
