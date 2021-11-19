@@ -4,6 +4,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
 	"net/http"
 	"strings"
@@ -52,6 +53,13 @@ func HandleErrorMiddleware(c *gin.Context, err error) bool {
 	return false
 }
 
+func SetAuthHeader(req *http.Request, at string) error {
+	val := fmt.Sprintf("Bearer %s", at)
+	req.Header.Set("Authorization", val)
+
+	return nil
+}
+
 func TokenFromContext(c *gin.Context) (string, error) {
 	tokenValue, exists := c.Get(config.ContextBearerToken)
 	if !exists {
@@ -66,7 +74,9 @@ func TokenFromContext(c *gin.Context) (string, error) {
 	return token, nil
 }
 
-func TokenFromHeader(header string) (string, error) {
+func TokenFromHeader(c *gin.Context) (string, error) {
+	header := c.GetHeader("Authorization")
+
 	if len(header) == 0 {
 		return "", errors.New("authorization header is missing")
 	}

@@ -16,9 +16,7 @@ type CheckJwtOptions struct {
 func CheckJwt(options CheckJwtOptions) func() gin.HandlerFunc {
 	return func() gin.HandlerFunc {
 		return func(c *gin.Context) {
-			header := c.GetHeader("Authorization")
-
-			token, err := httppkg.TokenFromHeader(header)
+			token, err := httppkg.TokenFromHeader(c)
 			if httppkg.HandleErrorMiddleware(c, err) {
 				return
 			}

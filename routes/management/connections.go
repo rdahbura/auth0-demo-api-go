@@ -6,7 +6,6 @@ import (
 
 	"dahbura.me/api/config"
 	"dahbura.me/api/routes/management/security"
-	"dahbura.me/api/security/oauth2"
 	httppkg "dahbura.me/api/util/http"
 
 	"github.com/gin-gonic/gin"
@@ -19,7 +18,12 @@ func GetConnections(c *gin.Context) {
 		return
 	}
 
-	err = oauth2.SetAuthHeader(req, security.GetClientCredSrc())
+	at, err := security.GetClientCredSrc().Token()
+	if httppkg.HandleError(c, err) {
+		return
+	}
+
+	err = httppkg.SetAuthHeader(req, at)
 	if httppkg.HandleError(c, err) {
 		return
 	}
@@ -41,7 +45,12 @@ func GetConnection(c *gin.Context) {
 		return
 	}
 
-	err = oauth2.SetAuthHeader(req, security.GetClientCredSrc())
+	at, err := security.GetClientCredSrc().Token()
+	if httppkg.HandleError(c, err) {
+		return
+	}
+
+	err = httppkg.SetAuthHeader(req, at)
 	if httppkg.HandleError(c, err) {
 		return
 	}

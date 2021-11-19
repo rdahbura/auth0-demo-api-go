@@ -4,26 +4,25 @@ import (
 	"sync"
 
 	"dahbura.me/api/config"
-	"dahbura.me/api/security/oauth2"
+	"dahbura.me/api/security/oauth2/clientcredentials"
 )
 
 var (
-	clientCredSrc  *oauth2.ClientCredentialsSource
-	clientCredOnce sync.Once
+	atsrc  *clientcredentials.AccessTokenSource
+	atonce sync.Once
 )
 
-func GetClientCredSrc() *oauth2.ClientCredentialsSource {
-	clientCredOnce.Do(func() {
-		clientCredReq := oauth2.ClientCredentialsRequest{
+func GetClientCredSrc() *clientcredentials.AccessTokenSource {
+	atonce.Do(func() {
+		atreq := &clientcredentials.AccessTokenRequest{
 			ClientId:     config.MgmtApiClientId,
 			ClientSecret: config.MgmtApiClientSecret,
 			Audience:     config.MgmtApiAudience,
-			Scopes:       []string{},
-			TokenUrl:     config.MgmtApiTokenUrl,
+			Url:          config.MgmtApiTokenUrl,
 		}
 
-		clientCredSrc = oauth2.NewClientCredentialsSource(clientCredReq)
+		atsrc = clientcredentials.NewSource(atreq)
 	})
 
-	return clientCredSrc
+	return atsrc
 }
