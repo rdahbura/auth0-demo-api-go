@@ -5,15 +5,11 @@ import (
 	"net/http"
 	"time"
 
-	"dahbura.me/api/config"
 	"dahbura.me/api/util/cache"
+	httppkg "dahbura.me/api/util/http"
 )
 
 var memoryCache = cache.New()
-
-var httpClient = http.Client{
-	Timeout: config.DefaultClientTimeout,
-}
 
 func fetchEncodedDer(jwksUrl string, kid string) (string, error) {
 	encodedDer, ok := memoryCache.Get(kid)
@@ -53,6 +49,8 @@ func readJwkSet(jwksUrl string) (*JwkSet, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	httpClient := httppkg.GetHttpClient()
 
 	res, err := httpClient.Do(req)
 	if err != nil {

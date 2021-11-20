@@ -14,7 +14,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var httpClient = http.Client{
+var httpClient = &http.Client{
 	Timeout: config.DefaultClientTimeout,
 }
 
@@ -32,6 +32,10 @@ func DoRequest(req *http.Request) ([]byte, error) {
 	}
 
 	return body, nil
+}
+
+func GetHttpClient() *http.Client {
+	return httpClient
 }
 
 func HandleError(c *gin.Context, err error) bool {

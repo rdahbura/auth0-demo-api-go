@@ -5,12 +5,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"dahbura.me/api/config"
+	httppkg "dahbura.me/api/util/http"
 )
-
-var httpClient = http.Client{
-	Timeout: config.DefaultClientTimeout,
-}
 
 type OpenIdProviderConfig struct {
 	Issuer                            string   `json:"issuer"`
@@ -40,6 +36,8 @@ func ReadOpenIdProviderConfig(issuer string) (*OpenIdProviderConfig, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	httpClient := httppkg.GetHttpClient()
 
 	res, err := httpClient.Do(req)
 	if err != nil {

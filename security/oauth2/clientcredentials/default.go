@@ -11,11 +11,8 @@ import (
 	"time"
 
 	"dahbura.me/api/config"
+	httppkg "dahbura.me/api/util/http"
 )
-
-var httpClient = http.Client{
-	Timeout: config.DefaultClientTimeout,
-}
 
 type ClientCredGrant struct {
 	atreq *AccessTokenRequest
@@ -104,6 +101,8 @@ func (atreq *AccessTokenRequest) do() (*AccessTokenResponse, error) {
 	}
 
 	req.Header.Set("Content-Type", config.MimeApplicationXWwwFormUrlencoded)
+
+	httpClient := httppkg.GetHttpClient()
 
 	res, err := httpClient.Do(req)
 	if err != nil {
