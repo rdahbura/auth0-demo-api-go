@@ -14,10 +14,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var httpClient = &http.Client{
-	Timeout: config.DefaultClientTimeout,
-}
-
 func DoRequest(req *http.Request) ([]byte, error) {
 	res, err := httpClient.Do(req)
 	if err != nil {
@@ -32,10 +28,6 @@ func DoRequest(req *http.Request) ([]byte, error) {
 	}
 
 	return body, nil
-}
-
-func GetHttpClient() *http.Client {
-	return httpClient
 }
 
 func HandleError(c *gin.Context, err error) bool {
