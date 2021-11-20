@@ -1,4 +1,4 @@
-package clientcredentials
+package client_credentials
 
 import (
 	"encoding/json"

@@ -4,15 +4,15 @@ import (
 	"sync"
 
 	"dahbura.me/api/config"
-	"dahbura.me/api/security/oauth2/clientcredentials"
+	clientCredentials "dahbura.me/api/security/oauth2/client_credentials"
 )
 
 var (
-	grant     *clientcredentials.ClientCredGrant
+	grant     *clientCredentials.ClientCredGrant
 	grantOnce sync.Once
 )
 
-func GetClientCredGrant() *clientcredentials.ClientCredGrant {
+func GetClientCredGrant() *clientCredentials.ClientCredGrant {
 	grantOnce.Do(func() {
 		initClientCredGrant()
 	})
@@ -21,12 +21,12 @@ func GetClientCredGrant() *clientcredentials.ClientCredGrant {
 }
 
 func initClientCredGrant() {
-	atreq := &clientcredentials.AccessTokenRequest{
+	atreq := &clientCredentials.AccessTokenRequest{
 		ClientId:     config.MgmtApiClientId,
 		ClientSecret: config.MgmtApiClientSecret,
 		Audience:     config.MgmtApiAudience,
 		Url:          config.MgmtApiTokenUrl,
 	}
 
-	grant = clientcredentials.NewClientCredGrant(atreq)
+	grant = clientCredentials.NewClientCredGrant(atreq)
 }
