@@ -23,10 +23,7 @@ func GetUsers(c *gin.Context) {
 		return
 	}
 
-	err = httppkg.SetAuthHeader(req, at)
-	if httppkg.HandleError(c, err) {
-		return
-	}
+	httppkg.SetAuthHeader(req, at)
 
 	body, err := httppkg.DoRequest(req)
 	if httppkg.HandleError(c, err) {
@@ -50,10 +47,7 @@ func GetUser(c *gin.Context) {
 		return
 	}
 
-	err = httppkg.SetAuthHeader(req, at)
-	if httppkg.HandleError(c, err) {
-		return
-	}
+	httppkg.SetAuthHeader(req, at)
 
 	body, err := httppkg.DoRequest(req)
 	if httppkg.HandleError(c, err) {
@@ -77,10 +71,7 @@ func PatchUser(c *gin.Context) {
 		return
 	}
 
-	err = httppkg.SetAuthHeader(req, at)
-	if httppkg.HandleError(c, err) {
-		return
-	}
+	httppkg.SetAuthHeader(req, at)
 
 	req.Header.Set("Content-Type", config.MimeApplicationJson)
 

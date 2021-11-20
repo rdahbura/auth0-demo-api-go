@@ -49,11 +49,9 @@ func HandleErrorMiddleware(c *gin.Context, err error) bool {
 	return false
 }
 
-func SetAuthHeader(req *http.Request, at string) error {
+func SetAuthHeader(req *http.Request, at string) {
 	val := fmt.Sprintf("Bearer %s", at)
 	req.Header.Set("Authorization", val)
-
-	return nil
 }
 
 func TokenFromContext(c *gin.Context) (string, error) {

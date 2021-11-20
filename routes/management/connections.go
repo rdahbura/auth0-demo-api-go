@@ -23,10 +23,7 @@ func GetConnections(c *gin.Context) {
 		return
 	}
 
-	err = httppkg.SetAuthHeader(req, at)
-	if httppkg.HandleError(c, err) {
-		return
-	}
+	httppkg.SetAuthHeader(req, at)
 
 	body, err := httppkg.DoRequest(req)
 	if httppkg.HandleError(c, err) {
@@ -50,10 +47,7 @@ func GetConnection(c *gin.Context) {
 		return
 	}
 
-	err = httppkg.SetAuthHeader(req, at)
-	if httppkg.HandleError(c, err) {
-		return
-	}
+	httppkg.SetAuthHeader(req, at)
 
 	body, err := httppkg.DoRequest(req)
 	if httppkg.HandleError(c, err) {
