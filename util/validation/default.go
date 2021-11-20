@@ -13,8 +13,12 @@ var (
 
 func GetValidator() *validator.Validate {
 	validatorOnce.Do(func() {
-		validatorValidate = validator.New()
+		initValidator()
 	})
 
 	return validatorValidate
+}
+
+func initValidator() {
+	validatorValidate = validator.New()
 }

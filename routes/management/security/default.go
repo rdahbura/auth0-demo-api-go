@@ -14,15 +14,19 @@ var (
 
 func GetClientCredGrant() *clientcredentials.ClientCredGrant {
 	grantOnce.Do(func() {
-		atreq := &clientcredentials.AccessTokenRequest{
-			ClientId:     config.MgmtApiClientId,
-			ClientSecret: config.MgmtApiClientSecret,
-			Audience:     config.MgmtApiAudience,
-			Url:          config.MgmtApiTokenUrl,
-		}
-
-		grant = clientcredentials.NewClientCredGrant(atreq)
+		initClientCredGrant()
 	})
 
 	return grant
+}
+
+func initClientCredGrant() {
+	atreq := &clientcredentials.AccessTokenRequest{
+		ClientId:     config.MgmtApiClientId,
+		ClientSecret: config.MgmtApiClientSecret,
+		Audience:     config.MgmtApiAudience,
+		Url:          config.MgmtApiTokenUrl,
+	}
+
+	grant = clientcredentials.NewClientCredGrant(atreq)
 }
