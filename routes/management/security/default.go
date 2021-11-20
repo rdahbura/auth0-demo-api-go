@@ -8,12 +8,12 @@ import (
 )
 
 var (
-	atsrc  *clientcredentials.AccessTokenSource
-	atonce sync.Once
+	grant     *clientcredentials.ClientCredGrant
+	grantOnce sync.Once
 )
 
-func GetClientCredSrc() *clientcredentials.AccessTokenSource {
-	atonce.Do(func() {
+func GetClientCredGrant() *clientcredentials.ClientCredGrant {
+	grantOnce.Do(func() {
 		atreq := &clientcredentials.AccessTokenRequest{
 			ClientId:     config.MgmtApiClientId,
 			ClientSecret: config.MgmtApiClientSecret,
@@ -21,8 +21,8 @@ func GetClientCredSrc() *clientcredentials.AccessTokenSource {
 			Url:          config.MgmtApiTokenUrl,
 		}
 
-		atsrc = clientcredentials.NewSource(atreq)
+		grant = clientcredentials.NewClientCredGrant(atreq)
 	})
 
-	return atsrc
+	return grant
 }

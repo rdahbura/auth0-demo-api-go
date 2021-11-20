@@ -17,7 +17,7 @@ var httpClient = http.Client{
 	Timeout: config.DefaultClientTimeout,
 }
 
-type AccessTokenSource struct {
+type ClientCredGrant struct {
 	atreq *AccessTokenRequest
 	atres *AccessTokenResponse
 	mtx   sync.Mutex
@@ -39,31 +39,31 @@ type AccessTokenResponse struct {
 	ExpiresAt time.Time
 }
 
-func NewSource(atreq *AccessTokenRequest) *AccessTokenSource {
+func NewClientCredGrant(atreq *AccessTokenRequest) *ClientCredGrant {
 	atres := AccessTokenResponse{}
-	atsrc := AccessTokenSource{
+	grant := ClientCredGrant{
 		atreq: atreq,
 		atres: &atres,
 		mtx:   sync.Mutex{},
 	}
 
-	return &atsrc
+	return &grant
 }
 
-func (atsrc *AccessTokenSource) Token() (string, error) {
-	atsrc.mtx.Lock()
-	defer atsrc.mtx.Unlock()
+func (grant *ClientCredGrant) Token() (string, error) {
+	grant.mtx.Lock()
+	defer grant.mtx.Unlock()
 
-	if atsrc.atres.hasExpired() {
-		atres, err := atsrc.atreq.do()
+	if grant.atres.hasExpired() {
+		atres, err := grant.atreq.do()
 		if err != nil {
 			return "", err
 		}
 
-		atsrc.atres = atres
+		grant.atres = atres
 	}
 
-	return atsrc.atres.AccessToken, nil
+	return grant.atres.AccessToken, nil
 }
 
 func NewRequest(tokenUrl string, clientId string, clientSecret string, audience string) (*AccessTokenRequest, error) {

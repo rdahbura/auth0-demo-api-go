@@ -18,7 +18,7 @@ func GetUsers(c *gin.Context) {
 		return
 	}
 
-	at, err := security.GetClientCredSrc().Token()
+	at, err := security.GetClientCredGrant().Token()
 	if httppkg.HandleError(c, err) {
 		return
 	}
@@ -45,7 +45,7 @@ func GetUser(c *gin.Context) {
 		return
 	}
 
-	at, err := security.GetClientCredSrc().Token()
+	at, err := security.GetClientCredGrant().Token()
 	if httppkg.HandleError(c, err) {
 		return
 	}
@@ -72,7 +72,7 @@ func PatchUser(c *gin.Context) {
 		return
 	}
 
-	at, err := security.GetClientCredSrc().Token()
+	at, err := security.GetClientCredGrant().Token()
 	if httppkg.HandleError(c, err) {
 		return
 	}

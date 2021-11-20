@@ -18,7 +18,7 @@ func GetClients(c *gin.Context) {
 		return
 	}
 
-	at, err := security.GetClientCredSrc().Token()
+	at, err := security.GetClientCredGrant().Token()
 	if httppkg.HandleError(c, err) {
 		return
 	}
@@ -45,7 +45,7 @@ func GetClient(c *gin.Context) {
 		return
 	}
 
-	at, err := security.GetClientCredSrc().Token()
+	at, err := security.GetClientCredGrant().Token()
 	if httppkg.HandleError(c, err) {
 		return
 	}
