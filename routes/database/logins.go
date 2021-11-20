@@ -45,9 +45,12 @@ func Logins(c *gin.Context) {
 		Projection: &projection,
 	}
 
+	ctx, cancel := context.WithTimeout(context.Background(), config.DefaultCtxTimeout)
+	defer cancel()
+
 	user := models.User{}
 	collection := client.Database(config.MongoDb).Collection("users")
-	err = collection.FindOne(context.TODO(), filter, &opts).Decode(&user)
+	err = collection.FindOne(ctx, filter, &opts).Decode(&user)
 	if httppkg.HandleError(c, err) {
 		return
 	}

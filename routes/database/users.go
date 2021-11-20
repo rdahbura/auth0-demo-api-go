@@ -52,8 +52,11 @@ func CreateUser(c *gin.Context) {
 	user.CreatedAt = now
 	user.UpdatedAt = now
 
+	ctx, cancel := context.WithTimeout(context.Background(), config.DefaultCtxTimeout)
+	defer cancel()
+
 	collection := client.Database(config.MongoDb).Collection("users")
-	result, err := collection.InsertOne(context.TODO(), user)
+	result, err := collection.InsertOne(ctx, user)
 	if httppkg.HandleError(c, err) {
 		return
 	}
@@ -79,8 +82,11 @@ func DeleteUser(c *gin.Context) {
 
 	filter := bson.M{"_id": objectId}
 
+	ctx, cancel := context.WithTimeout(context.Background(), config.DefaultCtxTimeout)
+	defer cancel()
+
 	collection := client.Database(config.MongoDb).Collection("users")
-	result, err := collection.DeleteOne(context.TODO(), filter)
+	result, err := collection.DeleteOne(ctx, filter)
 	if httppkg.HandleError(c, err) {
 		return
 	}
@@ -114,14 +120,20 @@ func GetUsers(c *gin.Context) {
 		Projection: &projection,
 	}
 
+	ctxFind, cancelFind := context.WithTimeout(context.Background(), config.DefaultCtxTimeout)
+	defer cancelFind()
+
 	collection := client.Database(config.MongoDb).Collection("users")
-	cursor, err := collection.Find(context.TODO(), filter, &opts)
+	cursor, err := collection.Find(ctxFind, filter, &opts)
 	if httppkg.HandleError(c, err) {
 		return
 	}
 
+	ctxCursor, cancelCursor := context.WithTimeout(context.Background(), config.DefaultCtxTimeout)
+	defer cancelCursor()
+
 	users := []models.User{}
-	err = cursor.All(context.TODO(), &users)
+	err = cursor.All(ctxCursor, &users)
 	if httppkg.HandleError(c, err) {
 		return
 	}
@@ -150,9 +162,12 @@ func GetUser(c *gin.Context) {
 		Projection: &projection,
 	}
 
+	ctx, cancel := context.WithTimeout(context.Background(), config.DefaultCtxTimeout)
+	defer cancel()
+
 	user := models.User{}
 	collection := client.Database(config.MongoDb).Collection("users")
-	err = collection.FindOne(context.TODO(), filter, &opts).Decode(&user)
+	err = collection.FindOne(ctx, filter, &opts).Decode(&user)
 	if err == mongo.ErrNoDocuments {
 		c.Status(http.StatusNotFound)
 		return
@@ -214,8 +229,11 @@ func UpdateUser(c *gin.Context) {
 		ReturnDocument: &after,
 	}
 
+	ctx, cancel := context.WithTimeout(context.Background(), config.DefaultCtxTimeout)
+	defer cancel()
+
 	collection := client.Database(config.MongoDb).Collection("users")
-	result := collection.FindOneAndUpdate(context.TODO(), filter, update, &opts)
+	result := collection.FindOneAndUpdate(ctx, filter, update, &opts)
 	if httppkg.HandleError(c, result.Err()) {
 		return
 	}
