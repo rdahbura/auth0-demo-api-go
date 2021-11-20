@@ -91,14 +91,14 @@ func TokenFromHeader(c *gin.Context) (string, error) {
 }
 
 func VerifyScope(token string, scopesClaim string, scope string) error {
-	encodedPayload := strings.Split(token, ".")[1]
-	decodedPayload, err := base64.RawURLEncoding.DecodeString(encodedPayload)
+	encPayload := strings.Split(token, ".")[1]
+	decPayload, err := base64.RawURLEncoding.DecodeString(encPayload)
 	if err != nil {
 		return err
 	}
 
 	payload := map[string]interface{}{}
-	err = json.Unmarshal(decodedPayload, &payload)
+	err = json.Unmarshal(decPayload, &payload)
 	if err != nil {
 		return err
 	}
