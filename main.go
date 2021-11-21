@@ -10,6 +10,7 @@ import (
 	"syscall"
 
 	"dahbura.me/api/config"
+	"dahbura.me/api/database/mongodb"
 	"dahbura.me/api/middleware"
 	"dahbura.me/api/routes"
 
@@ -46,6 +47,11 @@ func main() {
 	}
 
 	go func() {
+		log.Print("Connecting to mongo cluster")
+		if _, err := mongodb.GetMongoClient(); err != nil {
+			log.Fatalf("Error connecting to mongo cluster: %s\n", err)
+		}
+
 		log.Printf("Starting server on %s", config.Port)
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			log.Fatalf("Listen: %s\n", err)
