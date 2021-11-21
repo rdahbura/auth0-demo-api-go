@@ -11,7 +11,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Startup(router *gin.Engine) {
+func Register(router *gin.Engine) {
 	checkJwtOptions := middleware.CheckJwtOptions{
 		TokenAudience: config.TokenAudience,
 		TokenIssuer:   config.TokenIssuer + "/",
