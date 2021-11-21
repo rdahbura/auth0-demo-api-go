@@ -9,9 +9,9 @@ import (
 	httppkg "dahbura.me/api/util/http"
 )
 
-var memoryCache = cache.New()
-
 func fetchEncodedDer(jwksUrl string, kid string) (string, error) {
+	memoryCache := cache.GetMemoryCache()
+
 	encodedDer, ok := memoryCache.Get(kid)
 	if ok {
 		return encodedDer.(string), nil
