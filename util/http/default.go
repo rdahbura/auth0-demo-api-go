@@ -70,9 +70,8 @@ func TokenFromContext(c *gin.Context) (string, error) {
 
 func TokenFromHeader(c *gin.Context) (string, error) {
 	header := c.GetHeader("Authorization")
-
 	if len(header) == 0 {
-		return "", errors.New("authorization header is missing")
+		return "", errors.New("authorization header not found")
 	}
 
 	headerSegments := strings.Split(header, " ")
@@ -82,7 +81,7 @@ func TokenFromHeader(c *gin.Context) (string, error) {
 
 	schemeSegment := headerSegments[0]
 	if !strings.EqualFold(schemeSegment, "Bearer") {
-		return "", errors.New("authorization scheme is missing")
+		return "", errors.New("authorization scheme not found")
 	}
 
 	tokenSegment := headerSegments[1]
