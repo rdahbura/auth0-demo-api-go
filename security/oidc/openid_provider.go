@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"net/url"
 
 	httppkg "dahbura.me/api/util/http"
 )
@@ -30,6 +31,11 @@ type OpenIdProviderConfig struct {
 }
 
 func ReadOpenIdProviderConfig(issuer string) (*OpenIdProviderConfig, error) {
+	_, err := url.ParseRequestURI(issuer)
+	if err != nil {
+		return nil, err
+	}
+
 	url := fmt.Sprintf("%s/.well-known/openid-configuration", issuer)
 
 	req, err := http.NewRequest(http.MethodGet, url, nil)

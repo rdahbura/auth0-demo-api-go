@@ -28,12 +28,11 @@ type AccessTokenRequest struct {
 }
 
 type AccessTokenResponse struct {
-	AccessToken string `json:"access_token"`
-	TokenType   string `json:"token_type"`
-	ExpiresIn   int    `json:"expires_in"`
-	Scope       string `json:"scope"`
-
-	ExpiresAt time.Time
+	AccessToken string    `json:"access_token"`
+	TokenType   string    `json:"token_type"`
+	ExpiresIn   int       `json:"expires_in"`
+	Scope       string    `json:"scope"`
+	ExpiresAt   time.Time `json:"-"`
 }
 
 func NewClientCredGrant(atreq *AccessTokenRequest) *ClientCredGrant {
@@ -64,7 +63,7 @@ func (grant *ClientCredGrant) Token() (string, error) {
 }
 
 func NewRequest(tokenUrl string, clientId string, clientSecret string, audience string) (*AccessTokenRequest, error) {
-	_, err := url.Parse(tokenUrl)
+	_, err := url.ParseRequestURI(tokenUrl)
 	if err != nil {
 		return nil, err
 	}
