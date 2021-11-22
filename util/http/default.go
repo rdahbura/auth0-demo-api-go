@@ -113,17 +113,17 @@ func VerifyScope(token string, scopesClaim string, scope string) error {
 func hasScope(payload map[string]interface{}, scopesClaim string, scope string) error {
 	scopes, exists := payload[scopesClaim]
 	if !exists {
-		return errors.New("scopes claim not found")
+		return fmt.Errorf("scopes claim not found: %s", scopesClaim)
 	}
 
 	scopesArray, ok := scopes.([]interface{})
 	if !ok {
-		return errors.New("scopes claim improperly formatted")
+		return fmt.Errorf("scopes claim improperly formatted: %s", scopesClaim)
 	}
 
 	_, ok = toMap(scopesArray)[scope]
 	if !ok {
-		return errors.New("scope not found")
+		return fmt.Errorf("scope not found: %s", scope)
 	}
 
 	return nil
