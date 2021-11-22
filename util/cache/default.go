@@ -10,9 +10,7 @@ var (
 )
 
 func GetMemoryCache() *MemoryCache {
-	memotyCacheOnce.Do(func() {
-		initMemoryCache()
-	})
+	memotyCacheOnce.Do(initMemoryCache)
 
 	return memoryCache
 }

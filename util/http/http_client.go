@@ -13,9 +13,7 @@ var (
 )
 
 func GetHttpClient() *http.Client {
-	httpClientOnce.Do(func() {
-		initHttpClient()
-	})
+	httpClientOnce.Do(initHttpClient)
 
 	return httpClient
 }

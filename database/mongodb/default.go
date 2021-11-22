@@ -19,9 +19,7 @@ var (
 )
 
 func GetMongoClient() (*mongo.Client, error) {
-	mongoOnce.Do(func() {
-		initMongoClient()
-	})
+	mongoOnce.Do(initMongoClient)
 
 	return mongoClient, mongoError
 }

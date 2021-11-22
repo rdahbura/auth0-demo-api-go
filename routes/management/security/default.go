@@ -13,9 +13,7 @@ var (
 )
 
 func GetClientCredGrant() *clientCredentials.ClientCredGrant {
-	grantOnce.Do(func() {
-		initClientCredGrant()
-	})
+	grantOnce.Do(initClientCredGrant)
 
 	return grant
 }

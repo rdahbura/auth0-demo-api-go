@@ -12,9 +12,7 @@ var (
 )
 
 func GetValidator() *validator.Validate {
-	validatorOnce.Do(func() {
-		initValidator()
-	})
+	validatorOnce.Do(initValidator)
 
 	return validatorValidate
 }
