@@ -57,7 +57,7 @@ func SetAuthHeader(req *http.Request, at string) {
 func TokenFromContext(c *gin.Context) (string, error) {
 	tokenValue, exists := c.Get(config.ContextBearerToken)
 	if !exists {
-		return "", errors.New("unable to get bearer token")
+		return "", fmt.Errorf("unable to find token")
 	}
 
 	token, ok := tokenValue.(string)
