@@ -45,6 +45,12 @@ func CreateUser(c *gin.Context) {
 		return
 	}
 
+	if user.EmailVerified == nil {
+		t := new(bool)
+		*t = false
+		user.EmailVerified = t
+	}
+
 	user.Password = ""
 	user.PasswordHash = string(hash)
 
