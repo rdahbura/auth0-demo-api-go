@@ -40,15 +40,15 @@ func CreateUser(c *gin.Context) {
 		return
 	}
 
-	hash, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
-	if httppkg.HandleError(c, err) {
-		return
-	}
-
 	if user.EmailVerified == nil {
 		t := new(bool)
 		*t = false
 		user.EmailVerified = t
+	}
+
+	hash, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
+	if httppkg.HandleError(c, err) {
+		return
 	}
 
 	user.Password = ""
