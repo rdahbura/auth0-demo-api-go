@@ -19,7 +19,10 @@ func GetHttpClient() *http.Client {
 }
 
 func initHttpClient() {
+	t := http.DefaultTransport.(*http.Transport).Clone()
+
 	httpClient = &http.Client{
-		Timeout: config.DefaultClientTimeout,
+		Timeout:   config.DefaultClientTimeout,
+		Transport: t,
 	}
 }
