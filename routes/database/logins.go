@@ -56,6 +56,10 @@ func Logins(c *gin.Context) {
 	}
 
 	err = bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(login.Password))
+	if err == bcrypt.ErrMismatchedHashAndPassword {
+		c.Status(http.StatusUnauthorized)
+		return
+	}
 	if httppkg.HandleError(c, err) {
 		return
 	}
