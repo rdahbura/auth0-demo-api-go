@@ -22,7 +22,7 @@ import (
 )
 
 func CreateUser(c *gin.Context) {
-	client, err := mongodb.GetMongoClient()
+	db, err := mongodb.GetMongoDb()
 	if httppkg.HandleError(c, err) {
 		return
 	}
@@ -55,8 +55,7 @@ func CreateUser(c *gin.Context) {
 	ctx, cancel := context.WithTimeout(context.Background(), config.DefaultCtxTimeout)
 	defer cancel()
 
-	collection := client.Database(config.MongoDb).Collection("users")
-	result, err := collection.InsertOne(ctx, user)
+	result, err := db.Collection("users").InsertOne(ctx, user)
 	if httppkg.HandleError(c, err) {
 		return
 	}
@@ -70,7 +69,7 @@ func CreateUser(c *gin.Context) {
 }
 
 func DeleteUser(c *gin.Context) {
-	client, err := mongodb.GetMongoClient()
+	db, err := mongodb.GetMongoDb()
 	if httppkg.HandleError(c, err) {
 		return
 	}
@@ -85,8 +84,7 @@ func DeleteUser(c *gin.Context) {
 	ctx, cancel := context.WithTimeout(context.Background(), config.DefaultCtxTimeout)
 	defer cancel()
 
-	collection := client.Database(config.MongoDb).Collection("users")
-	result, err := collection.DeleteOne(ctx, filter)
+	result, err := db.Collection("users").DeleteOne(ctx, filter)
 	if httppkg.HandleError(c, err) {
 		return
 	}
@@ -100,7 +98,7 @@ func DeleteUser(c *gin.Context) {
 }
 
 func GetUsers(c *gin.Context) {
-	client, err := mongodb.GetMongoClient()
+	db, err := mongodb.GetMongoDb()
 	if httppkg.HandleError(c, err) {
 		return
 	}
@@ -123,8 +121,7 @@ func GetUsers(c *gin.Context) {
 	ctxFind, cancelFind := context.WithTimeout(context.Background(), config.DefaultCtxTimeout)
 	defer cancelFind()
 
-	collection := client.Database(config.MongoDb).Collection("users")
-	cursor, err := collection.Find(ctxFind, filter, &opts)
+	cursor, err := db.Collection("users").Find(ctxFind, filter, &opts)
 	if httppkg.HandleError(c, err) {
 		return
 	}
@@ -143,7 +140,7 @@ func GetUsers(c *gin.Context) {
 }
 
 func GetUser(c *gin.Context) {
-	client, err := mongodb.GetMongoClient()
+	db, err := mongodb.GetMongoDb()
 	if httppkg.HandleError(c, err) {
 		return
 	}
@@ -166,8 +163,7 @@ func GetUser(c *gin.Context) {
 	defer cancel()
 
 	user := models.User{}
-	collection := client.Database(config.MongoDb).Collection("users")
-	err = collection.FindOne(ctx, filter, &opts).Decode(&user)
+	err = db.Collection("users").FindOne(ctx, filter, &opts).Decode(&user)
 	if err == mongo.ErrNoDocuments {
 		c.Status(http.StatusNotFound)
 		return
@@ -181,7 +177,7 @@ func GetUser(c *gin.Context) {
 }
 
 func UpdateUser(c *gin.Context) {
-	client, err := mongodb.GetMongoClient()
+	db, err := mongodb.GetMongoDb()
 	if httppkg.HandleError(c, err) {
 		return
 	}
@@ -232,8 +228,7 @@ func UpdateUser(c *gin.Context) {
 	ctx, cancel := context.WithTimeout(context.Background(), config.DefaultCtxTimeout)
 	defer cancel()
 
-	collection := client.Database(config.MongoDb).Collection("users")
-	result := collection.FindOneAndUpdate(ctx, filter, update, &opts)
+	result := db.Collection("users").FindOneAndUpdate(ctx, filter, update, &opts)
 	if httppkg.HandleError(c, result.Err()) {
 		return
 	}

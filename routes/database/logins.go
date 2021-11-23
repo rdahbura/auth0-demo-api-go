@@ -19,7 +19,7 @@ import (
 )
 
 func Logins(c *gin.Context) {
-	client, err := mongodb.GetMongoClient()
+	db, err := mongodb.GetMongoDb()
 	if httppkg.HandleError(c, err) {
 		return
 	}
@@ -49,8 +49,7 @@ func Logins(c *gin.Context) {
 	defer cancel()
 
 	user := models.User{}
-	collection := client.Database(config.MongoDb).Collection("users")
-	err = collection.FindOne(ctx, filter, &opts).Decode(&user)
+	err = db.Collection("users").FindOne(ctx, filter, &opts).Decode(&user)
 	if httppkg.HandleError(c, err) {
 		return
 	}

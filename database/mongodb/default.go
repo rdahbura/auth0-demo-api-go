@@ -13,18 +13,18 @@ import (
 )
 
 var (
-	mongoClient *mongo.Client
-	mongoError  error
-	mongoOnce   sync.Once
+	mongoDatabase *mongo.Database
+	mongoError    error
+	mongoOnce     sync.Once
 )
 
-func GetMongoClient() (*mongo.Client, error) {
-	mongoOnce.Do(initMongoClient)
+func GetMongoDb() (*mongo.Database, error) {
+	mongoOnce.Do(initMongoDb)
 
-	return mongoClient, mongoError
+	return mongoDatabase, mongoError
 }
 
-func initMongoClient() {
+func initMongoDb() {
 	opts := url.Values{}
 	opts.Set("retryWrites", "true")
 	opts.Set("w", "majority")
@@ -43,18 +43,18 @@ func initMongoClient() {
 	clientOptions := options.Client().ApplyURI(uri)
 	client, err := mongo.Connect(ctx, clientOptions)
 	if err != nil {
-		mongoClient = nil
+		mongoDatabase = nil
 		mongoError = err
 		return
 	}
 
 	err = client.Ping(ctx, nil)
 	if err != nil {
-		mongoClient = nil
+		mongoDatabase = nil
 		mongoError = err
 		return
 	}
 
-	mongoClient = client
+	mongoDatabase = client.Database(config.MongoDb)
 	mongoError = nil
 }
