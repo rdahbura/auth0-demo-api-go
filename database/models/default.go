@@ -14,7 +14,7 @@ type Login struct {
 type User struct {
 	Id            primitive.ObjectID `bson:"_id,omitempty" json:"_id,omitempty"`
 	Email         string             `bson:"email,omitempty" json:"email,omitempty"`
-	EmailVerified bool               `bson:"email_verified,omitempty" json:"email_verified,omitempty"`
+	EmailVerified *bool              `bson:"email_verified,omitempty" json:"email_verified,omitempty"`
 	Username      string             `bson:"username,omitempty" json:"username,omitempty"`
 	Password      string             `bson:"password,omitempty" json:"password,omitempty"`
 	PasswordHash  string             `bson:"password_hash,omitempty" json:"password_hash,omitempty"`
