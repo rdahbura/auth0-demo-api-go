@@ -25,23 +25,23 @@ func GetMongoDb() (*mongo.Database, error) {
 }
 
 func initMongoDb() {
-	opts := url.Values{}
-	opts.Set("retryWrites", "true")
-	opts.Set("w", "majority")
+	values := url.Values{}
+	values.Set("retryWrites", "true")
+	values.Set("w", "majority")
 
 	uri := fmt.Sprintf("mongodb+srv://%s:%s@%s/%s?%s",
 		config.MongoUsr,
 		config.MongoPwd,
 		config.MongoUri,
 		config.MongoDb,
-		opts.Encode(),
+		values.Encode(),
 	)
 
 	ctx, cancel := context.WithTimeout(context.Background(), config.DefaultCtxTimeout)
 	defer cancel()
 
-	clientOptions := options.Client().ApplyURI(uri)
-	client, err := mongo.Connect(ctx, clientOptions)
+	opts := options.Client().ApplyURI(uri)
+	client, err := mongo.Connect(ctx, opts)
 	if err != nil {
 		mongoDatabase = nil
 		mongoError = err

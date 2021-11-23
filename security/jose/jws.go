@@ -58,12 +58,12 @@ func (jwt *Jwt) IssuedAt() time.Time {
 
 // VerifyCompact returns the verified state of a JWT using the
 // JWS Compact Serialization format.
-func VerifyCompact(jws string, issuer string, audience string) error {
-	if len(jws) == 0 {
+func VerifyCompact(token string, issuer string, audience string) error {
+	if len(token) == 0 {
 		return errors.New("missing token")
 	}
 
-	segments := strings.Split(jws, ".")
+	segments := strings.Split(token, ".")
 	if len(segments) != 3 {
 		return errors.New("incompatible token detected (not JWS compact)")
 	}
