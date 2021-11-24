@@ -118,7 +118,7 @@ func hasScope(payload map[string]interface{}, scopesClaim string, scope string) 
 
 	scopesArray, ok := scopes.([]interface{})
 	if !ok {
-		return fmt.Errorf("scopes claim improperly formatted: %s", scopesClaim)
+		return fmt.Errorf("scopes claim not an array: %s", scopesClaim)
 	}
 
 	_, ok = toMap(scopesArray)[scope]
