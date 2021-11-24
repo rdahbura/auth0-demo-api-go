@@ -8,12 +8,12 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type CheckJwtOptions struct {
+type CheckJwtOpts struct {
 	TokenAudience string
 	TokenIssuer   string
 }
 
-func CheckJwt(options CheckJwtOptions) func() gin.HandlerFunc {
+func CheckJwt(opts CheckJwtOpts) func() gin.HandlerFunc {
 	return func() gin.HandlerFunc {
 		return func(c *gin.Context) {
 			token, err := httppkg.TokenFromHeader(c)
@@ -21,7 +21,7 @@ func CheckJwt(options CheckJwtOptions) func() gin.HandlerFunc {
 				return
 			}
 
-			err = jose.VerifyCompact(token, options.TokenIssuer, options.TokenAudience)
+			err = jose.VerifyCompact(token, opts.TokenIssuer, opts.TokenAudience)
 			if httppkg.HandleErrorMiddleware(c, err) {
 				return
 			}

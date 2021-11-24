@@ -6,11 +6,11 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type CheckScopeOptions struct {
+type CheckScopeOpts struct {
 	ScopesClaim string
 }
 
-func CheckScope(options CheckScopeOptions) func(string) gin.HandlerFunc {
+func CheckScope(opts CheckScopeOpts) func(string) gin.HandlerFunc {
 	return func(scope string) gin.HandlerFunc {
 		return func(c *gin.Context) {
 			token, err := httppkg.TokenFromContext(c)
@@ -18,7 +18,7 @@ func CheckScope(options CheckScopeOptions) func(string) gin.HandlerFunc {
 				return
 			}
 
-			err = httppkg.VerifyScope(token, options.ScopesClaim, scope)
+			err = httppkg.VerifyScope(token, opts.ScopesClaim, scope)
 			if httppkg.HandleErrorMiddleware(c, err) {
 				return
 			}

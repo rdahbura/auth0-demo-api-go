@@ -12,16 +12,16 @@ import (
 )
 
 func Register(router *gin.Engine) {
-	checkJwtOptions := middleware.CheckJwtOptions{
+	checkJwtOpts := middleware.CheckJwtOpts{
 		TokenAudience: config.TokenAudience,
 		TokenIssuer:   config.TokenIssuer + "/",
 	}
-	checkJwt := middleware.CheckJwt(checkJwtOptions)
+	checkJwt := middleware.CheckJwt(checkJwtOpts)
 
-	checkScopeOptions := middleware.CheckScopeOptions{
+	checkScopeOpts := middleware.CheckScopeOpts{
 		ScopesClaim: "permissions",
 	}
-	checkScope := middleware.CheckScope(checkScopeOptions)
+	checkScope := middleware.CheckScope(checkScopeOpts)
 
 	rg := router.Group("/")
 	{
