@@ -19,7 +19,7 @@ import (
 )
 
 func Logins(c *gin.Context) {
-	db, err := mongodb.GetMongoDb()
+	db, err := mongodb.GetDatabase()
 	if httppkg.HandleError(c, err) {
 		return
 	}

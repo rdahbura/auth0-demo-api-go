@@ -48,7 +48,7 @@ func main() {
 
 	go func() {
 		log.Print("Connecting to mongo cluster")
-		if _, err := mongodb.GetMongoDb(); err != nil {
+		if _, err := mongodb.GetDatabase(); err != nil {
 			log.Fatalf("Error connecting to mongo cluster: %s\n", err)
 		}
 

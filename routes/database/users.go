@@ -22,7 +22,7 @@ import (
 )
 
 func CreateUser(c *gin.Context) {
-	db, err := mongodb.GetMongoDb()
+	db, err := mongodb.GetDatabase()
 	if httppkg.HandleError(c, err) {
 		return
 	}
@@ -75,7 +75,7 @@ func CreateUser(c *gin.Context) {
 }
 
 func DeleteUser(c *gin.Context) {
-	db, err := mongodb.GetMongoDb()
+	db, err := mongodb.GetDatabase()
 	if httppkg.HandleError(c, err) {
 		return
 	}
@@ -104,7 +104,7 @@ func DeleteUser(c *gin.Context) {
 }
 
 func GetUsers(c *gin.Context) {
-	db, err := mongodb.GetMongoDb()
+	db, err := mongodb.GetDatabase()
 	if httppkg.HandleError(c, err) {
 		return
 	}
@@ -146,7 +146,7 @@ func GetUsers(c *gin.Context) {
 }
 
 func GetUser(c *gin.Context) {
-	db, err := mongodb.GetMongoDb()
+	db, err := mongodb.GetDatabase()
 	if httppkg.HandleError(c, err) {
 		return
 	}
@@ -183,7 +183,7 @@ func GetUser(c *gin.Context) {
 }
 
 func UpdateUser(c *gin.Context) {
-	db, err := mongodb.GetMongoDb()
+	db, err := mongodb.GetDatabase()
 	if httppkg.HandleError(c, err) {
 		return
 	}

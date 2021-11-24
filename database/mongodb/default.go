@@ -18,7 +18,7 @@ var (
 	mongoOnce     sync.Once
 )
 
-func GetMongoDb() (*mongo.Database, error) {
+func GetDatabase() (*mongo.Database, error) {
 	mongoOnce.Do(initMongoDb)
 
 	return mongoDatabase, mongoError
