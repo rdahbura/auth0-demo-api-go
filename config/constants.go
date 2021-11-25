@@ -7,12 +7,12 @@ const (
 )
 
 const (
-	DefaultClientTimeout = time.Second * 5
-	DefaultCtxTimeout    = time.Second * 5
+	DefaultClientTimeout = time.Second * 10
+	DefaultCtxTimeout    = time.Second * 10
 	DefaultIdleTimeout   = time.Second * 60
-	DefaultReadTimeout   = time.Second * 15
+	DefaultReadTimeout   = time.Second * 10
 	DefaultTokenLeeway   = time.Second * 30
-	DefaultWriteTimeout  = time.Second * 15
+	DefaultWriteTimeout  = time.Second * 10
 )
 
 const (
