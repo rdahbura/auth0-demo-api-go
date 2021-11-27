@@ -6,11 +6,11 @@ import (
 
 var (
 	memoryCache     *MemoryCache
-	memotyCacheOnce sync.Once
+	memoryCacheOnce sync.Once
 )
 
 func GetMemoryCache() *MemoryCache {
-	memotyCacheOnce.Do(initMemoryCache)
+	memoryCacheOnce.Do(initMemoryCache)
 
 	return memoryCache
 }
