@@ -1,4 +1,4 @@
-FROM golang:1.17
+FROM golang:1.18
 
 WORKDIR /auth0-demo-api-go
 COPY ./ ./
